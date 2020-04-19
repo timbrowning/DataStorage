@@ -1,0 +1,63 @@
+SELECT EnglishProductCategoryName,
+EnglishProductSubcategoryName,
+EnglishProductName,
+StandardCost,
+Color,
+ListPrice,
+DealerPrice,
+Size,
+SizeRange,
+Weight,
+DaysToManufacture,
+Class,
+Style,
+Status,
+CurrencyName,
+SalesOrderNumber,
+OrderQuantity,
+UnitPrice,
+ExtendedAmount,
+UnitPriceDiscountPct,
+DiscountAmount,
+ProductStandardCost,
+TotalProductCost,
+SalesAmount,
+TaxAmt,
+OrderDate,
+EnglishDayNameOfWeek,
+DueDate,
+ShipDate,
+EnglishPromotionName,
+DiscountPct,
+EnglishPromotionType,
+EnglishPromotionCategory,
+SalesTerritoryRegion,
+SalesTerritoryCountry,
+SalesTerritoryGroup,
+City,
+StateProvinceName,
+EnglishCountryRegionName,
+dcus.CustomerKey,
+FirstName,
+BirthDate,
+MaritalStatus,
+Gender,
+YearlyIncome,
+TotalChildren,
+NumberChildrenAtHome,
+EnglishEducation,
+EnglishOccupation,
+HouseOwnerFlag,
+NumberCarsOwned,
+DateFirstPurchase,
+CommuteDistance
+FROM FactInternetSales fis
+LEFT JOIN DimProduct dp ON fis.ProductKey = dp.ProductKey
+LEFT JOIN DimProductSubcategory dps ON dp.ProductSubcategoryKey = dps.ProductSubcategoryKey
+LEFT JOIN DimProductCategory dpc ON dps.ProductCategoryKey = dpc.ProductCategoryKey
+LEFT JOIN DimCurrency dc ON fis.CurrencyKey = dc.CurrencyKey
+LEFT JOIN DimPromotion dpromo ON fis.PromotionKey = dpromo.PromotionKey
+LEFT JOIN DimSalesTerritory dst ON fis.SalesTerritoryKey = dst.SalesTerritoryKey
+LEFT JOIN DimCustomer dcus ON fis.CustomerKey = dcus.CustomerKey
+LEFT JOIN DimGeography dg ON dcus.GeographyKey = dg.GeographyKey
+LEFT JOIN DimDate dd on fis.OrderDateKey = dd.DateKey

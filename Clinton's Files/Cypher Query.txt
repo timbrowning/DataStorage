@@ -1,0 +1,27 @@
+CREATE CONSTRAINT ON (son:SalesOrderNumber) ASSERT son.salesordernumber IS UNIQUE;
+CREATE CONSTRAINT ON (cus:CustomerKey) ASSERT cus.customerkey IS UNIQUE;
+:auto USING PERIODIC COMMIT LOAD CSV WITH HEADERS FROM 'file:///AW2017.csv' AS row
+MERGE (son:SalesOrderNumber {salesordernumber: row.SalesOrderNumber,orderdate:row.OrderDate})
+MERGE (pc:ProductCategory {productcategory: row.EnglishProductCategoryName})
+MERGE (psc:ProductSubCategory {productsubcategory: row.EnglishProductSubcategoryName})
+MERGE (co:Color {color: row.Color})
+MERGE (pr:Promotion {promotion: row.EnglishPromotionCategory})
+MERGE (stg:SalesTerritoryGroup {salesterritorygroup: row.SalesTerritoryGroup})
+MERGE (cus:CustomerKey {customerkey: row.CustomerKey, firstname:row.FirstName, yearlyincome:row.YearlyIncome,maritalstatus: row.MaritalStatus})
+MERGE (crn:CountryRegionName {countryregionname: row.EnglishCountryRegionName})
+MERGE (ci:City {city: row.City})
+MERGE (ge: Gender {gender: row.Gender})
+MERGE (ee: Education {education: row.EnglishEducation})
+MERGE (tc: TotalChildren {totalchildren: row.TotalChildren})
+MERGE (son)-[:WITH_CATEGORY]->(pc)
+MERGE (son)-[:SOLD_IN]->(stg)
+MERGE (pc)-[:CONTAINS]->(psc)
+MERGE (psc)-[:HAS_COLOR]->(co)
+MERGE (psc)-[:WITH_PROMOTION]->(pr)
+MERGE (cus)-[:ORDERED]->(son)
+MERGE (cus)-[:WITH_GENDER]->(ge)
+MERGE (cus)-[:WITH_EDUCATION]->(ee)
+MERGE (cus)-[:HAS_CHILDREN]->(tc)
+MERGE (cus)-[:LIVES_IN]->(crn)
+MERGE (crn)-[:HAS_CITY]->(ci)
+RETURN *
